@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Stock Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="page-shell">
+        <div class="top-bar">
+            <div class="brand">MarketScope AI</div>
+            <a class="btn btn-secondary" href="/history">View History</a>
+        </div>
+
+        <section class="panel panel-padding">
+            <h1 class="page-title">Premium Stock Analysis Dashboard</h1>
+            <p class="page-subtitle">Select a ticker to run model inference, trend analysis, and a 7-day forecast.</p>
+
+            <form action="/predict" method="POST" class="grid grid-2" style="margin-top: 20px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div>
+                    <label class="form-label" for="stock">Ticker</label>
+                    <select id="stock" name="stock" required>
+                        <option value="">Select a stock</option>
+                        <option value="AAPL">Apple (AAPL)</option>
+                        <option value="GOOGL">Google (GOOGL)</option>
+                        <option value="MSFT">Microsoft (MSFT)</option>
+                        <option value="TSLA">Tesla (TSLA)</option>
+                    </select>
+                </div>
+                <div style="align-self: end;">
+                    <button class="btn btn-primary" type="submit" style="width: 100%;">Run Analysis</button>
+                </div>
+            </form>
+
+            {% if error %}
+            <div class="status-alert error">{{ error }}</div>
+            {% endif %}
+
+            {% if model_status %}
+            <div id="model-status-message" class="status-alert">
+                Model Status: {{ model_status.get("state", "unknown") }}
+                {% if model_status.get("message") %}- {{ model_status.get("message") }}{% endif %}
+            </div>
+            {% endif %}
+        </section>
+    </div>
+    <footer>
+        <p>AI-Based Stock Price Prediction System</p>
+    </footer>
+    {% if model_status and status_stock and model_status.get("state") in ["queued", "training"] %}
+    <script>
+        const statusStock = "{{ status_stock }}";
+        const statusMessageEl = document.getElementById("model-status-message");
+
+        async function refreshModelStatus() {
+            try {
+                const response = await fetch(`/model_status?stock=${statusStock}`);
+                if (!response.ok) {
+                    return;
+                }
+                const data = await response.json();
+                if (!statusMessageEl) {
+                    return;
+                }
+                const state = data.state || "unknown";
+                const message = data.message ? ` - ${data.message}` : "";
+                statusMessageEl.textContent = `Model Status: ${state}${message}`;
+
+                if (state === "ready") {
+                    statusMessageEl.className = "status-alert success";
+                    return;
+                }
+                if (state === "failed") {
+                    statusMessageEl.className = "status-alert error";
+                    return;
+                }
+                statusMessageEl.className = "status-alert";
+                setTimeout(refreshModelStatus, 4000);
+            } catch (error) {
+                setTimeout(refreshModelStatus, 5000);
+            }
+        }
+
+        setTimeout(refreshModelStatus, 3000);
+    </script>
+    {% endif %}
+</body>
+</html>

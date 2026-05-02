@@ -1,0 +1,79 @@
+{
+  "ticker": "AAPL",
+  "model_type": "RandomForestRegressor",
+  "trained_at": "2026-05-02T07:10:53.175125Z",
+  "feature_columns": [
+    "Price_Range",
+    "Price_Change",
+    "Daily_Return",
+    "Log_Return",
+    "Lag_1",
+    "Lag_2",
+    "Lag_3",
+    "Rolling_Mean_5",
+    "Rolling_Mean_10",
+    "Rolling_STD_5",
+    "Rolling_STD_10",
+    "Volume_Change",
+    "MA10",
+    "MA50",
+    "EMA20",
+    "RSI",
+    "MACD",
+    "BB_width",
+    "Volatility"
+  ],
+  "metrics": {
+    "mae": 20.9653,
+    "rmse": 27.2113,
+    "r2": -0.2067,
+    "mape": 8.2805,
+    "directional_accuracy": 55.64
+  },
+  "backtest": {
+    "folds": [
+      {
+        "mae": 10.8301,
+        "rmse": 13.045,
+        "r2": -1.7625,
+        "mape": 4.1064,
+        "directional_accuracy": 65.52
+      },
+      {
+        "mae": 6.6029,
+        "rmse": 8.1402,
+        "r2": -1.5107,
+        "mape": 2.3746,
+        "directional_accuracy": 37.93
+      },
+      {
+        "mae": 8.3454,
+        "rmse": 10.3274,
+        "r2": -0.5379,
+        "mape": 3.2537,
+        "directional_accuracy": 51.72
+      },
+      {
+        "mae": 5.0275,
+        "rmse": 6.0795,
+        "r2": 0.4784,
+        "mape": 1.9193,
+        "directional_accuracy": 48.28
+      },
+      {
+        "mae": 2.3912,
+        "rmse": 3.0526,
+        "r2": 0.8739,
+        "mape": 0.9099,
+        "directional_accuracy": 48.28
+      }
+    ],
+    "aggregate": {
+      "mae": 6.6394,
+      "rmse": 8.1289,
+      "r2": -0.4918,
+      "mape": 2.5128,
+      "directional_accuracy": 50.346
+    }
+  }
+}

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Result</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="page-shell">
+        <div class="top-bar">
+            <div>
+                <p class="brand">MarketScope AI</p>
+                <h1 class="page-title" style="margin-top: 6px;">{{ stock }} Analysis Dashboard</h1>
+                <p class="page-subtitle">Prediction model output, risk signals, and near-term forecast. Prices shown in INR (USD × spot USD/INR).</p>
+            </div>
+            <div class="action-row">
+                <a href="/" class="btn btn-secondary">Back</a>
+                <a href="/download/{{ stock }}" class="btn btn-primary">Download PDF Report</a>
+            </div>
+        </div>
+
+        {% if usd_inr_rate %}
+        <p class="page-subtitle" style="margin-bottom: 16px;">Spot used: 1 USD ≈ {{ usd_inr_rate }} INR (via USDINR=X).</p>
+        {% endif %}
+
+        <section class="grid grid-4">
+            <article class="panel metric-card">
+                <p class="metric-label">Predicted Price</p>
+                <p class="metric-value">INR {{ prediction }}</p>
+            </article>
+            <article class="panel metric-card">
+                <p class="metric-label">Directional Accuracy</p>
+                <p class="metric-value">{{ accuracy }}%</p>
+            </article>
+            <article class="panel metric-card">
+                <p class="metric-label">MAE / RMSE</p>
+                <p class="metric-value">{{ metrics.get('mae', 'N/A') }} / {{ metrics.get('rmse', 'N/A') }}</p>
+            </article>
+            <article class="panel metric-card">
+                <p class="metric-label">R2 / MAPE</p>
+                <p class="metric-value">{{ metrics.get('r2', 'N/A') }} / {{ metrics.get('mape', 'N/A') }}%</p>
+            </article>
+        </section>
+
+        <section class="grid grid-3" style="margin-top: 16px;">
+            <article class="panel panel-padding">
+                <p class="metric-label">Trend</p>
+                <p class="metric-value" style="font-size: 1.15rem;">
+                    <span class="badge {{ trend|lower }}">{{ trend }}</span>
+                </p>
+            </article>
+            <article class="panel panel-padding">
+                <p class="metric-label">Signal</p>
+                <p class="metric-value" style="font-size: 1.15rem;">
+                    <span class="badge {{ signal|lower }}">{{ signal }}</span>
+                </p>
+            </article>
+            <article class="panel panel-padding">
+                <p class="metric-label">Risk</p>
+                <p class="metric-value" style="font-size: 1.15rem;">
+                    <span class="badge {{ risk.split(' ')[0]|lower }}">{{ risk }}</span>
+                </p>
+            </article>
+        </section>
+
+        <section class="panel panel-padding" style="margin-top: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;">
+                <h3 id="chart-section-title" style="margin: 0;">Price Trend — Candlestick (INR)</h3>
+                <div class="action-row" style="margin-top: 0;">
+                    <button type="button" id="chart-type-candle" class="btn btn-secondary">Candlestick</button>
+                    <button type="button" id="chart-type-line" class="btn btn-secondary">Line</button>
+                </div>
+            </div>
+            <div id="chart"></div>
+        </section>
+
+        <section class="panel panel-padding" style="margin-top: 16px;">
+            <h3 style="margin: 0 0 12px;">7-Day Forecast</h3>
+            <div class="grid grid-4">
+                {% for price in future_prices %}
+                <div class="metric-card panel" style="padding: 14px;">
+                    <p class="metric-label">Day {{ loop.index }}</p>
+                    <p class="metric-value" style="font-size: 1.1rem;">INR {{ price }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>AI-Based Stock Price Prediction System</p>
+    </footer>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        var stockSymbol = "{{ stock }}";
+        var chartKind = "candle";
+
+        var graphs = JSON.parse(`{{ graph | safe }}`);
+        var candleTrace = (graphs.data && graphs.data.length) ? graphs.data[0] : null;
+        var lineTrace = null;
+        if (candleTrace && candleTrace.close) {
+            lineTrace = {
+                type: "scatter",
+                mode: "lines",
+                name: stockSymbol + " Close (INR)",
+                x: candleTrace.x,
+                y: candleTrace.close,
+                line: { color: "#4f8cff", width: 1.8 }
+            };
+        }
+
+        function setSectionTitle() {
+            var el = document.getElementById("chart-section-title");
+            if (!el) {
+                return;
+            }
+            el.textContent = chartKind === "line"
+                ? "Price Trend — Line (INR)"
+                : "Price Trend — Candlestick (INR)";
+        }
+
+        var layoutBase = Object.assign({}, graphs.layout || {}, {
+            template: "plotly_dark",
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "#0e1a31",
+            font: { color: "#cfe0ff", family: "Segoe UI, sans-serif" },
+            margin: { l: 48, r: 22, t: 48, b: 42 },
+            title: Object.assign({}, (graphs.layout || {}).title || {}, {
+                text: stockSymbol + " — Candlestick (INR)",
+                x: 0.5,
+                xanchor: "center"
+            }),
+            xaxis: Object.assign({}, (graphs.layout || {}).xaxis || {}, {
+                title: "Date",
+                gridcolor: "rgba(160,180,220,0.14)",
+                linecolor: "rgba(160,180,220,0.35)",
+                rangeslider: { visible: false },
+                rangeselector: {
+                    buttons: [
+                        { count: 7, label: "1w", step: "day", stepmode: "backward" },
+                        { count: 1, label: "1m", step: "month", stepmode: "backward" },
+                        { count: 3, label: "3m", step: "month", stepmode: "backward" },
+                        { count: 6, label: "6m", step: "month", stepmode: "backward" },
+                        { count: 1, label: "1y", step: "year", stepmode: "backward" },
+                        { step: "all", label: "all" }
+                    ]
+                }
+            }),
+            yaxis: Object.assign({}, (graphs.layout || {}).yaxis || {}, {
+                title: "Price (INR)",
+                gridcolor: "rgba(160,180,220,0.14)",
+                zerolinecolor: "rgba(160,180,220,0.22)",
+                autorange: true,
+                fixedrange: false
+            }),
+            hoverlabel: {
+                bgcolor: "#18243d",
+                bordercolor: "#30466f",
+                font: { color: "#f5f8ff" }
+            }
+        });
+
+        var config = {
+            responsive: true,
+            displaylogo: false,
+            modeBarButtonsToRemove: ["lasso2d", "select2d", "autoScale2d"],
+            toImageButtonOptions: { format: "png", filename: "{{ stock }}_analysis_chart", scale: 2 }
+        };
+
+        function mergeLayoutFromGd(gd) {
+            var L = JSON.parse(JSON.stringify(layoutBase));
+            if (gd && gd.layout && gd.layout.xaxis) {
+                L.xaxis = Object.assign({}, L.xaxis, gd.layout.xaxis);
+            }
+            if (gd && gd.layout && gd.layout.yaxis) {
+                L.yaxis = Object.assign({}, L.yaxis, gd.layout.yaxis);
+            }
+            return L;
+        }
+
+        function plotTitleForKind() {
+            return chartKind === "line"
+                ? stockSymbol + " — Line (INR)"
+                : stockSymbol + " — Candlestick (INR)";
+        }
+
+        function toTime(x) {
+            if (typeof x === "number" && isFinite(x)) {
+                return x;
+            }
+            return new Date(x).getTime();
+        }
+
+        function extractXRange(eventData, layout) {
+            if (eventData) {
+                if (eventData["xaxis.range"] && eventData["xaxis.range"].length === 2) {
+                    return eventData["xaxis.range"];
+                }
+                if (eventData["xaxis.range[0]"] !== undefined && eventData["xaxis.range[1]"] !== undefined) {
+                    return [eventData["xaxis.range[0]"], eventData["xaxis.range[1]"]];
+                }
+            }
+            if (layout && layout.xaxis && layout.xaxis.range && layout.xaxis.range.length === 2) {
+                return layout.xaxis.range;
+            }
+            return null;
+        }
+
+        function fitYAxisToVisibleX(gd, eventData) {
+            if (!candleTrace || !candleTrace.x || !candleTrace.x.length) {
+                return;
+            }
+            var layout = gd.layout || {};
+            var trace = chartKind === "line" ? lineTrace : candleTrace;
+            if (!trace || !trace.x) {
+                return;
+            }
+
+            var rng = extractXRange(eventData, layout);
+            var autorangeX = eventData && eventData["xaxis.autorange"] === true;
+            if (autorangeX) {
+                rng = null;
+            }
+
+            var t0 = -Infinity;
+            var t1 = Infinity;
+            if (rng && rng[0] != null && rng[1] != null) {
+                t0 = toTime(rng[0]);
+                t1 = toTime(rng[1]);
+                if (t0 > t1) {
+                    var swap = t0;
+                    t0 = t1;
+                    t1 = swap;
+                }
+            }
+
+            var ymin = Infinity;
+            var ymax = -Infinity;
+            var xs = trace.x;
+            var i;
+            var padRatio = 0.06;
+
+            if (chartKind === "line" && trace.y) {
+                for (i = 0; i < xs.length; i++) {
+                    var tx = toTime(xs[i]);
+                    if (tx < t0 || tx > t1) {
+                        continue;
+                    }
+                    var y = trace.y[i];
+                    if (y < ymin) {
+                        ymin = y;
+                    }
+                    if (y > ymax) {
+                        ymax = y;
+                    }
+                }
+            } else if (trace.high && trace.low) {
+                for (i = 0; i < xs.length; i++) {
+                    var tx2 = toTime(xs[i]);
+                    if (tx2 < t0 || tx2 > t1) {
+                        continue;
+                    }
+                    if (trace.low[i] < ymin) {
+                        ymin = trace.low[i];
+                    }
+                    if (trace.high[i] > ymax) {
+                        ymax = trace.high[i];
+                    }
+                }
+            }
+
+            if (!isFinite(ymin) || !isFinite(ymax)) {
+                Plotly.relayout(gd, { "yaxis.autorange": true, "yaxis.fixedrange": false });
+                return;
+            }
+            if (ymin === ymax) {
+                ymin -= Math.abs(ymin) * 0.01 + 1;
+                ymax += Math.abs(ymax) * 0.01 + 1;
+            }
+            var span = ymax - ymin;
+            var pad = span * padRatio;
+            Plotly.relayout(gd, {
+                "yaxis.range": [ymin - pad, ymax + pad],
+                "yaxis.autorange": false,
+                "yaxis.fixedrange": false
+            });
+        }
+
+        var yFitTimer = null;
+        function scheduleYFit(gd) {
+            if (yFitTimer) {
+                clearTimeout(yFitTimer);
+            }
+            yFitTimer = setTimeout(function () {
+                fitYAxisToVisibleX(gd, null);
+                yFitTimer = null;
+            }, 50);
+        }
+
+        function renderChart(gd) {
+            if (!candleTrace) {
+                return;
+            }
+            var trace = chartKind === "line" ? lineTrace : candleTrace;
+            if (!trace) {
+                return;
+            }
+            var L = mergeLayoutFromGd(gd);
+            L.title = Object.assign({}, L.title || {}, {
+                text: plotTitleForKind(),
+                x: 0.5,
+                xanchor: "center"
+            });
+            setSectionTitle();
+            Plotly.react(gd, [trace], L, config).then(function () {
+                fitYAxisToVisibleX(gd, null);
+            });
+        }
+
+        function initChart() {
+            var gd = document.getElementById("chart");
+            setSectionTitle();
+            var L0 = JSON.parse(JSON.stringify(layoutBase));
+            L0.title = Object.assign({}, L0.title || {}, {
+                text: plotTitleForKind(),
+                x: 0.5,
+                xanchor: "center"
+            });
+
+            if (candleTrace) {
+                Plotly.newPlot(gd, [candleTrace], L0, config).then(function () {
+                    fitYAxisToVisibleX(gd, null);
+                });
+            } else if (graphs.data && graphs.data.length) {
+                Plotly.newPlot(gd, graphs.data, L0, config);
+            }
+
+            gd.on("plotly_relayout", function (ed) {
+                if (!ed) {
+                    return;
+                }
+                var keys = Object.keys(ed);
+                if (keys.length && keys.every(function (k) { return k.indexOf("yaxis") === 0; })) {
+                    return;
+                }
+                if (keys.length === 1 && keys[0] === "autosize") {
+                    return;
+                }
+                scheduleYFit(gd);
+            });
+        }
+
+        document.getElementById("chart-type-candle").addEventListener("click", function () {
+            chartKind = "candle";
+            renderChart(document.getElementById("chart"));
+        });
+        document.getElementById("chart-type-line").addEventListener("click", function () {
+            chartKind = "line";
+            renderChart(document.getElementById("chart"));
+        });
+
+        initChart();
+    </script>
+</body>
+</html>

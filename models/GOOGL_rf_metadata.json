@@ -1,0 +1,79 @@
+{
+  "ticker": "GOOGL",
+  "model_type": "RandomForestRegressor",
+  "trained_at": "2026-05-02T07:11:51.349965Z",
+  "feature_columns": [
+    "Price_Range",
+    "Price_Change",
+    "Daily_Return",
+    "Log_Return",
+    "Lag_1",
+    "Lag_2",
+    "Lag_3",
+    "Rolling_Mean_5",
+    "Rolling_Mean_10",
+    "Rolling_STD_5",
+    "Rolling_STD_10",
+    "Volume_Change",
+    "MA10",
+    "MA50",
+    "EMA20",
+    "RSI",
+    "MACD",
+    "BB_width",
+    "Volatility"
+  ],
+  "metrics": {
+    "mae": 28.3476,
+    "rmse": 38.2689,
+    "r2": -1.0568,
+    "mape": 14.1236,
+    "directional_accuracy": 55.09
+  },
+  "backtest": {
+    "folds": [
+      {
+        "mae": 4.7888,
+        "rmse": 5.8781,
+        "r2": -0.0309,
+        "mape": 3.1464,
+        "directional_accuracy": 55.17
+      },
+      {
+        "mae": 2.0715,
+        "rmse": 2.7522,
+        "r2": 0.7424,
+        "mape": 1.2223,
+        "directional_accuracy": 65.52
+      },
+      {
+        "mae": 2.4627,
+        "rmse": 2.9704,
+        "r2": 0.8699,
+        "mape": 1.326,
+        "directional_accuracy": 72.41
+      },
+      {
+        "mae": 23.7617,
+        "rmse": 30.7482,
+        "r2": -1.6785,
+        "mape": 10.2584,
+        "directional_accuracy": 65.52
+      },
+      {
+        "mae": 8.6631,
+        "rmse": 12.2696,
+        "r2": -1.163,
+        "mape": 3.3602,
+        "directional_accuracy": 55.17
+      }
+    ],
+    "aggregate": {
+      "mae": 8.3496,
+      "rmse": 10.9237,
+      "r2": -0.252,
+      "mape": 3.8627,
+      "directional_accuracy": 62.758
+    }
+  }
+}

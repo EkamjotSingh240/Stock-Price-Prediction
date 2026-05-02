@@ -1,0 +1,79 @@
+{
+  "ticker": "TSLA",
+  "model_type": "RandomForestRegressor",
+  "trained_at": "2026-05-02T07:13:55.884373Z",
+  "feature_columns": [
+    "Price_Range",
+    "Price_Change",
+    "Daily_Return",
+    "Log_Return",
+    "Lag_1",
+    "Lag_2",
+    "Lag_3",
+    "Rolling_Mean_5",
+    "Rolling_Mean_10",
+    "Rolling_STD_5",
+    "Rolling_STD_10",
+    "Volume_Change",
+    "MA10",
+    "MA50",
+    "EMA20",
+    "RSI",
+    "MACD",
+    "BB_width",
+    "Volatility"
+  ],
+  "metrics": {
+    "mae": 39.8184,
+    "rmse": 53.0834,
+    "r2": 0.4525,
+    "mape": 9.8699,
+    "directional_accuracy": 66.67
+  },
+  "backtest": {
+    "folds": [
+      {
+        "mae": 20.8424,
+        "rmse": 23.8581,
+        "r2": -3.0786,
+        "mape": 4.6432,
+        "directional_accuracy": 65.52
+      },
+      {
+        "mae": 13.0304,
+        "rmse": 17.7405,
+        "r2": 0.5324,
+        "mape": 3.001,
+        "directional_accuracy": 58.62
+      },
+      {
+        "mae": 9.8137,
+        "rmse": 11.2387,
+        "r2": 0.6917,
+        "mape": 2.197,
+        "directional_accuracy": 48.28
+      },
+      {
+        "mae": 7.1055,
+        "rmse": 9.0233,
+        "r2": 0.1889,
+        "mape": 1.7493,
+        "directional_accuracy": 65.52
+      },
+      {
+        "mae": 8.4356,
+        "rmse": 10.0882,
+        "r2": 0.5354,
+        "mape": 2.2452,
+        "directional_accuracy": 58.62
+      }
+    ],
+    "aggregate": {
+      "mae": 11.8455,
+      "rmse": 14.3898,
+      "r2": -0.226,
+      "mape": 2.7671,
+      "directional_accuracy": 59.312
+    }
+  }
+}
