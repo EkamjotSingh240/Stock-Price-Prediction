@@ -1,7 +1,7 @@
 {
   "ticker": "MSFT",
   "model_type": "RandomForestRegressor",
-  "trained_at": "2026-05-02T07:12:53.181652Z",
+  "trained_at": "2026-05-07T06:01:43.379413Z",
   "feature_columns": [
     "Price_Range",
     "Price_Change",
@@ -24,56 +24,56 @@
     "Volatility"
   ],
   "metrics": {
-    "mae": 27.2048,
-    "rmse": 39.3115,
-    "r2": 0.335,
-    "mape": 5.6356,
-    "directional_accuracy": 60.29
+    "mae": 27.0778,
+    "rmse": 39.1179,
+    "r2": 0.3416,
+    "mape": 5.6122,
+    "directional_accuracy": 58.92
   },
   "backtest": {
     "folds": [
       {
-        "mae": 6.0932,
-        "rmse": 8.6904,
-        "r2": 0.2043,
-        "mape": 1.1592,
-        "directional_accuracy": 65.52
+        "mae": 6.7997,
+        "rmse": 9.2349,
+        "r2": 0.3152,
+        "mape": 1.303,
+        "directional_accuracy": 62.07
       },
       {
-        "mae": 12.3909,
-        "rmse": 14.17,
-        "r2": -0.8398,
-        "mape": 2.5751,
-        "directional_accuracy": 41.38
+        "mae": 13.1827,
+        "rmse": 14.5849,
+        "r2": -1.3242,
+        "mape": 2.7412,
+        "directional_accuracy": 37.93
       },
       {
-        "mae": 12.0131,
-        "rmse": 16.4436,
-        "r2": 0.3706,
-        "mape": 2.6623,
+        "mae": 12.3855,
+        "rmse": 16.5959,
+        "r2": 0.6117,
+        "mape": 2.757,
         "directional_accuracy": 68.97
       },
       {
-        "mae": 4.3272,
-        "rmse": 5.5031,
-        "r2": 0.4482,
-        "mape": 1.0822,
-        "directional_accuracy": 82.76
+        "mae": 5.0497,
+        "rmse": 6.1794,
+        "r2": 0.5026,
+        "mape": 1.2739,
+        "directional_accuracy": 79.31
       },
       {
-        "mae": 7.0873,
-        "rmse": 9.8538,
-        "r2": 0.8202,
-        "mape": 1.7736,
-        "directional_accuracy": 58.62
+        "mae": 6.7075,
+        "rmse": 9.8178,
+        "r2": 0.827,
+        "mape": 1.6681,
+        "directional_accuracy": 51.72
       }
     ],
     "aggregate": {
-      "mae": 8.3823,
-      "rmse": 10.9322,
-      "r2": 0.2007,
-      "mape": 1.8505,
-      "directional_accuracy": 63.45
+      "mae": 8.825,
+      "rmse": 11.2826,
+      "r2": 0.1865,
+      "mape": 1.9486,
+      "directional_accuracy": 60.0
     }
   }
 }

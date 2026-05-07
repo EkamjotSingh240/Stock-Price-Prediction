@@ -1,0 +1,79 @@
+{
+  "ticker": "NFLX",
+  "model_type": "RandomForestRegressor",
+  "trained_at": "2026-05-07T06:42:44.765889Z",
+  "feature_columns": [
+    "Price_Range",
+    "Price_Change",
+    "Daily_Return",
+    "Log_Return",
+    "Lag_1",
+    "Lag_2",
+    "Lag_3",
+    "Rolling_Mean_5",
+    "Rolling_Mean_10",
+    "Rolling_STD_5",
+    "Rolling_STD_10",
+    "Volume_Change",
+    "MA10",
+    "MA50",
+    "EMA20",
+    "RSI",
+    "MACD",
+    "BB_width",
+    "Volatility"
+  ],
+  "metrics": {
+    "mae": 16.8706,
+    "rmse": 21.3417,
+    "r2": -1.1972,
+    "mape": 18.3649,
+    "directional_accuracy": 62.01
+  },
+  "backtest": {
+    "folds": [
+      {
+        "mae": 5.1806,
+        "rmse": 6.3135,
+        "r2": -1.3968,
+        "mape": 5.7402,
+        "directional_accuracy": 75.86
+      },
+      {
+        "mae": 3.1508,
+        "rmse": 4.144,
+        "r2": 0.2763,
+        "mape": 3.0858,
+        "directional_accuracy": 51.72
+      },
+      {
+        "mae": 2.3621,
+        "rmse": 3.1619,
+        "r2": 0.4763,
+        "mape": 2.7961,
+        "directional_accuracy": 58.62
+      },
+      {
+        "mae": 3.5641,
+        "rmse": 4.3744,
+        "r2": 0.7394,
+        "mape": 4.1445,
+        "directional_accuracy": 72.41
+      },
+      {
+        "mae": 2.0314,
+        "rmse": 2.667,
+        "r2": 0.6394,
+        "mape": 2.1233,
+        "directional_accuracy": 62.07
+      }
+    ],
+    "aggregate": {
+      "mae": 3.2578,
+      "rmse": 4.1322,
+      "r2": 0.1469,
+      "mape": 3.578,
+      "directional_accuracy": 64.136
+    }
+  }
+}

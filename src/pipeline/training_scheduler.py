@@ -65,11 +65,12 @@ class TrainingScheduler:
 
     def _loop(self):
         while not self._stop_event.is_set():
-            self.run_daily_training()
             next_run = datetime.now(timezone.utc) + timedelta(hours=self.interval_hours)
+            # Wait for the first interval before starting full-universe retraining.
             while datetime.now(timezone.utc) < next_run:
                 if self._stop_event.wait(timeout=5):
                     return
+            self.run_daily_training()
 
     def start(self):
         if self._thread and self._thread.is_alive():

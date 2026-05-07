@@ -1,7 +1,7 @@
 {
   "ticker": "GOOGL",
   "model_type": "RandomForestRegressor",
-  "trained_at": "2026-05-02T07:11:51.349965Z",
+  "trained_at": "2026-05-07T06:00:38.631047Z",
   "feature_columns": [
     "Price_Range",
     "Price_Change",
@@ -24,56 +24,56 @@
     "Volatility"
   ],
   "metrics": {
-    "mae": 28.3476,
-    "rmse": 38.2689,
-    "r2": -1.0568,
-    "mape": 14.1236,
-    "directional_accuracy": 55.09
+    "mae": 28.4318,
+    "rmse": 38.339,
+    "r2": -1.0644,
+    "mape": 14.1697,
+    "directional_accuracy": 53.52
   },
   "backtest": {
     "folds": [
       {
-        "mae": 4.7888,
-        "rmse": 5.8781,
-        "r2": -0.0309,
-        "mape": 3.1464,
-        "directional_accuracy": 55.17
-      },
-      {
-        "mae": 2.0715,
-        "rmse": 2.7522,
-        "r2": 0.7424,
-        "mape": 1.2223,
+        "mae": 4.8187,
+        "rmse": 5.9406,
+        "r2": -0.053,
+        "mape": 3.1675,
         "directional_accuracy": 65.52
       },
       {
-        "mae": 2.4627,
-        "rmse": 2.9704,
-        "r2": 0.8699,
-        "mape": 1.326,
+        "mae": 2.0692,
+        "rmse": 2.7321,
+        "r2": 0.7461,
+        "mape": 1.2215,
+        "directional_accuracy": 68.97
+      },
+      {
+        "mae": 2.4675,
+        "rmse": 2.977,
+        "r2": 0.8693,
+        "mape": 1.3295,
+        "directional_accuracy": 75.86
+      },
+      {
+        "mae": 23.7533,
+        "rmse": 30.7295,
+        "r2": -1.6752,
+        "mape": 10.2553,
+        "directional_accuracy": 58.62
+      },
+      {
+        "mae": 7.8882,
+        "rmse": 11.4834,
+        "r2": -0.8946,
+        "mape": 3.0535,
         "directional_accuracy": 72.41
-      },
-      {
-        "mae": 23.7617,
-        "rmse": 30.7482,
-        "r2": -1.6785,
-        "mape": 10.2584,
-        "directional_accuracy": 65.52
-      },
-      {
-        "mae": 8.6631,
-        "rmse": 12.2696,
-        "r2": -1.163,
-        "mape": 3.3602,
-        "directional_accuracy": 55.17
       }
     ],
     "aggregate": {
-      "mae": 8.3496,
-      "rmse": 10.9237,
-      "r2": -0.252,
-      "mape": 3.8627,
-      "directional_accuracy": 62.758
+      "mae": 8.1994,
+      "rmse": 10.7725,
+      "r2": -0.2015,
+      "mape": 3.8055,
+      "directional_accuracy": 68.276
     }
   }
 }

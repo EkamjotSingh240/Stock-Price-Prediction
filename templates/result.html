@@ -10,7 +10,7 @@
             <div>
                 <p class="brand">MarketScope AI</p>
                 <h1 class="page-title" style="margin-top: 6px;">{{ stock }} Analysis Dashboard</h1>
-                <p class="page-subtitle">Prediction model output, risk signals, and near-term forecast. Prices shown in INR (USD × spot USD/INR).</p>
+                <p class="page-subtitle">Prediction model output, risk signals, and near-term forecast. Prices shown in USD.</p>
             </div>
             <div class="action-row">
                 <a href="/" class="btn btn-secondary">Back</a>
@@ -18,14 +18,10 @@
             </div>
         </div>
 
-        {% if usd_inr_rate %}
-        <p class="page-subtitle" style="margin-bottom: 16px;">Spot used: 1 USD ≈ {{ usd_inr_rate }} INR (via USDINR=X).</p>
-        {% endif %}
-
         <section class="grid grid-4">
             <article class="panel metric-card">
                 <p class="metric-label">Predicted Price</p>
-                <p class="metric-value">INR {{ prediction }}</p>
+                <p class="metric-value">USD {{ prediction }}</p>
             </article>
             <article class="panel metric-card">
                 <p class="metric-label">Directional Accuracy</p>
@@ -64,7 +60,7 @@
 
         <section class="panel panel-padding" style="margin-top: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;">
-                <h3 id="chart-section-title" style="margin: 0;">Price Trend — Candlestick (INR)</h3>
+                <h3 id="chart-section-title" style="margin: 0;">Price Trend — Candlestick (USD)</h3>
                 <div class="action-row" style="margin-top: 0;">
                     <button type="button" id="chart-type-candle" class="btn btn-secondary">Candlestick</button>
                     <button type="button" id="chart-type-line" class="btn btn-secondary">Line</button>
@@ -79,7 +75,7 @@
                 {% for price in future_prices %}
                 <div class="metric-card panel" style="padding: 14px;">
                     <p class="metric-label">Day {{ loop.index }}</p>
-                    <p class="metric-value" style="font-size: 1.1rem;">INR {{ price }}</p>
+                    <p class="metric-value" style="font-size: 1.1rem;">USD {{ price }}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -102,7 +98,7 @@
             lineTrace = {
                 type: "scatter",
                 mode: "lines",
-                name: stockSymbol + " Close (INR)",
+                name: stockSymbol + " Close (USD)",
                 x: candleTrace.x,
                 y: candleTrace.close,
                 line: { color: "#4f8cff", width: 1.8 }
@@ -115,8 +111,8 @@
                 return;
             }
             el.textContent = chartKind === "line"
-                ? "Price Trend — Line (INR)"
-                : "Price Trend — Candlestick (INR)";
+                ? "Price Trend — Line (USD)"
+                : "Price Trend — Candlestick (USD)";
         }
 
         var layoutBase = Object.assign({}, graphs.layout || {}, {
@@ -126,7 +122,7 @@
             font: { color: "#cfe0ff", family: "Segoe UI, sans-serif" },
             margin: { l: 48, r: 22, t: 48, b: 42 },
             title: Object.assign({}, (graphs.layout || {}).title || {}, {
-                text: stockSymbol + " — Candlestick (INR)",
+                text: stockSymbol + " — Candlestick (USD)",
                 x: 0.5,
                 xanchor: "center"
             }),
@@ -147,7 +143,7 @@
                 }
             }),
             yaxis: Object.assign({}, (graphs.layout || {}).yaxis || {}, {
-                title: "Price (INR)",
+                title: "Price (USD)",
                 gridcolor: "rgba(160,180,220,0.14)",
                 zerolinecolor: "rgba(160,180,220,0.22)",
                 autorange: true,
@@ -180,8 +176,8 @@
 
         function plotTitleForKind() {
             return chartKind === "line"
-                ? stockSymbol + " — Line (INR)"
-                : stockSymbol + " — Candlestick (INR)";
+                ? stockSymbol + " — Line (USD)"
+                : stockSymbol + " — Candlestick (USD)";
         }
 
         function toTime(x) {

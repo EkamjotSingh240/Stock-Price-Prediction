@@ -140,7 +140,6 @@ def create_app():
             accuracy=result["accuracy"],
             metrics=result.get("metrics", {}),
             future_prices=result["future_prices"],
-            usd_inr_rate=result.get("usd_inr_rate"),
         )
 
     @app.route("/model_status")
@@ -169,7 +168,7 @@ def create_app():
         report_canvas.drawString(150, 800, "AI Stock Prediction Report")
         report_canvas.setFont("Helvetica", 12)
         report_canvas.drawString(50, 760, f"Stock Name: {stock}")
-        report_canvas.drawString(50, 740, f"Predicted Price: INR {result['prediction']}")
+        report_canvas.drawString(50, 740, f"Predicted Price: USD {result['prediction']}")
         report_canvas.drawString(50, 720, f"Directional Accuracy: {result['accuracy']} %")
         report_canvas.drawString(50, 690, f"Trend: {result['trend']}")
         report_canvas.drawString(50, 670, f"Signal: {result['signal']}")
@@ -178,7 +177,7 @@ def create_app():
 
         y_pos = 600
         for i, price in enumerate(result["future_prices"], start=1):
-            report_canvas.drawString(70, y_pos, f"Day {i}: INR {price}")
+            report_canvas.drawString(70, y_pos, f"Day {i}: USD {price}")
             y_pos -= 20
 
         report_canvas.drawString(50, 430, f"Generated On: {datetime.now().strftime('%d-%m-%Y %H:%M')}")

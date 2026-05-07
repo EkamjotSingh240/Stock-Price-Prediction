@@ -22,7 +22,6 @@ def test_predict_route_success(monkeypatch):
             "metrics": {"mae": 1.2, "rmse": 1.8, "r2": 0.9, "mape": 2.1},
             "future_prices": [151, 152, 153, 154, 155, 156, 157],
             "graph": '{"data":[],"layout":{}}',
-            "usd_inr_rate": 83.0,
         }
 
     monkeypatch.setattr(app_module, "run_pipeline", fake_run_pipeline)
